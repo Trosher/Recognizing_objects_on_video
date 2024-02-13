@@ -1,0 +1,1 @@
+"""Module containing the necessary functionality for building and initialization of the project."""
