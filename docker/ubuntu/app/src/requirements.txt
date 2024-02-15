@@ -1,0 +1,17 @@
+# video_server requirements
+# Usage: pip install -r requirements.txt
+
+# Base ------------------------------------------------------------------------
+pydantic==2.5.3
+fastapi==0.105.0
+redis==5.0.1
+pyspark==3.5.0
+pyarrow==15.0.0
+confluent-kafka==2.3.0
+aiokafka==0.10.0
+imageio==2.33.1
+loguru==0.7.2
+msgpack_numpy==0.4.8
+uvicorn==0.27.1
+yolov5==7.0.13
+grpcio_status==1.60.0

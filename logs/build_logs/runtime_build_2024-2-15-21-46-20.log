@@ -1,0 +1,21 @@
+2024-02-15 21:46:20.728 | INFO     | __main__:build:23 - Start work build function.
+
+2024-02-15 21:46:20.729 | INFO     | init.init_docker:start:40 - Start work init_docker function.
+
+"docker build" requires exactly 1 argument.
+See 'docker build --help'.
+
+Usage:  docker build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+spark-worker Pulling 
+spark-master Pulling 
+spark-worker Error 
+spark-master Error 
+Error response from daemon: pull access denied for sandbox/spark, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+2024-02-15 21:46:23.182 | INFO     | init.init_docker:start:44 - Creation and launching of docker servers is completed.
+
+2024-02-15 21:46:23.183 | INFO     | init.init_docker:start:47 - End work init_docker function.
+
+2024-02-15 21:46:23.183 | INFO     | __main__:build:25 - End work build function.
+

@@ -1,5 +1,0 @@
-2024-02-14 00:37:06.287 | INFO     | __main__:__create_log_file:39 - C:\Users\User\Desktop\Recognizing_objects_on_video\logs\server_get_vidio_log\runtime_server_get_vidio_2024-2-14-0-37-6.log
-2024-02-14 00:37:06.288 | INFO     | __main__:start:111 - Start get_video_server
-2024-02-14 00:37:48.365 | INFO     | __main__:__working_with_message:75 - New message (b'{"user": 5, "url":"http://211.132.61.124:80/mjpg/video.mjpg"}') received from the url_video topic
-2024-02-14 00:37:48.366 | INFO     | __main__:__retrieving_dir_from_message:59 - Adding a new user 5
-2024-02-14 00:38:06.411 | INFO     | __main__:__end_work:47 - End work get_vidio_server

@@ -12,18 +12,11 @@ class init_docker(object):
         Starts the process of initialize the all docker servers.
     """
     def __create_docker_server(self, file, slash:str):
-        call(['docker', 'build', f'docker{slash}kafka_spart_redis{slash}', 
-              '-t', 'cluster-apache-spark:3.0.2'], 
-             stdout=file, stderr=file, stdin=file)
+        #call(['docker', 'build', f'docker{slash}', 
+        #      '-t', 'sandbox/spark', '.'],
+        #     stdout=file, stderr=file, stdin=file)
         call(['docker-compose', '-f', 
-              f'docker{slash}kafka_spart_redis{slash}docker-compose.yml', 'up', '-d', '--build'], 
-             stdout=file, stderr=file, stdin=file)        
-
-        call(['docker', 'build', f'docker{slash}sorse{slash}', 
-              '-t', 'my_ubuntu'], 
-             stdout=file, stderr=file, stdin=file)
-        call(['docker-compose', '-f', 
-              f'docker{slash}sorse{slash}docker-compose.yml', 'up', '-d', '--build'], 
+              f'docker{slash}docker-compose.yml', 'up', '-d', '--build'], 
              stdout=file, stderr=file, stdin=file)
         
     def start(self, path_to_log, slash):
