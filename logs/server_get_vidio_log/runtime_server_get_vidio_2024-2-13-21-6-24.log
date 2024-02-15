@@ -1,4 +1,0 @@
-2024-02-13 21:06:24.251 | INFO     | __main__:__create_log_file:39 - C:\Users\User\Desktop\video_server\logs\server_get_vidio_log\runtime_server_get_vidio_2024-2-13-21-6-24.log
-2024-02-13 21:06:24.252 | INFO     | __main__:start:111 - Start get_video_server
-2024-02-13 21:06:34.622 | INFO     | __main__:__working_with_message:75 - New message (b'{"user": 1, "url":"http://211.132.61.124:80/mjpg/video.mjpg"}') received from the url_video topic
-2024-02-13 21:06:34.623 | INFO     | __main__:__retrieving_dir_from_message:59 - Adding a new user 1

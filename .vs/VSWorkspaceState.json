@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\docker",
+    "\\docker\\kafka_spart_redis",
+    "\\docker\\sorse",
+    "\\init",
+    "\\init\\__pycache__",
+    "\\logs",
+    "\\logs\\build_logs"
+  ],
+  "SelectedNode": "\\docker\\sorse\\docker-compose.yml",
+  "PreviewInSolutionExplorer": false
+}
