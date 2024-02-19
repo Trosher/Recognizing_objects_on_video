@@ -1,0 +1,282 @@
+2024-02-19 15:36:39.340 | INFO     | __main__:build:23 - Start work build function.
+
+2024-02-19 15:36:39.341 | INFO     | init.init_docker:start:40 - Start work init_docker function.
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.67kB done
+#1 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:latest
+#3 DONE 0.7s
+
+#4 [1/8] FROM docker.io/library/ubuntu:latest@sha256:f9d633ff6640178c2d0525017174a688e2c1aef28f0a0130b26bd5554491f0da
+#4 CACHED
+
+#5 [internal] load build context
+#5 transferring context: 2.82kB done
+#5 DONE 0.0s
+
+#6 [2/8] RUN apt update &&     apt-get install -y lsb-release &&     apt-get -y install firefox &&     apt-get install -y wget &&     apt-get install -y openjdk-11-jdk &&     apt-get install -y --no-install-recommends software-properties-common &&     apt-get install -y --no-install-recommends gpg-agent &&     add-apt-repository ppa:deadsnakes/ppa &&     apt-get install -y --no-install-recommends python3.11 &&     apt-get install -y --no-install-recommends python3-pip &&     apt-get install -y --no-install-recommends python3.11-venv &&     apt-get install -y openssh-server unzip curl &&     service ssh start &&     apt install -y sudo &&     apt-get install -y --no-install-recommends python3.11 &&     apt-get clean &&     rm -rf /var/lib/apt/lists/*
+#6 0.371 
+#6 0.371 WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+#6 0.371 
+#6 0.683 Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
+#6 1.495 Get:2 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1070 kB]
+#6 2.327 Get:3 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+#6 2.709 Get:4 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [44.6 kB]
+#6 3.228 Get:5 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [1796 kB]
+#6 3.254 Get:6 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]
+#6 4.013 Get:7 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [109 kB]
+#6 4.757 Get:8 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+#6 5.497 Get:9 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [1463 kB]
+#6 6.081 Get:10 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+#6 6.915 Get:11 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+#6 9.362 Get:12 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+#6 10.80 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [1742 kB]
+#6 12.17 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1343 kB]
+#6 13.46 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [50.4 kB]
+#6 14.06 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [1834 kB]
+#6 15.39 Get:17 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [28.1 kB]
+#6 15.87 Get:18 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [50.4 kB]
+#6 16.18 Fetched 29.7 MB in 16s (1882 kB/s)
+#6 16.18 Reading package lists...
+#6 17.05 Building dependency tree...
+#6 17.24 Reading state information...
+#6 17.25 3 packages can be upgraded. Run 'apt list --upgradable' to see them.
+#6 17.28 Reading package lists...
+#6 17.99 Building dependency tree...
+#6 18.16 Reading state information...
+#6 18.31 The following additional packages will be installed:
+#6 18.31   distro-info-data libexpat1 libmpdec3 libpython3-stdlib libpython3.10-minimal
+#6 18.31   libpython3.10-stdlib libreadline8 libsqlite3-0 media-types python3
+#6 18.31   python3-minimal python3.10 python3.10-minimal readline-common
+#6 18.32 Suggested packages:
+#6 18.32   python3-doc python3-tk python3-venv python3.10-venv python3.10-doc binutils
+#6 18.32   binfmt-support readline-doc
+#6 18.37 The following NEW packages will be installed:
+#6 18.37   distro-info-data libexpat1 libmpdec3 libpython3-stdlib libpython3.10-minimal
+#6 18.37   libpython3.10-stdlib libreadline8 libsqlite3-0 lsb-release media-types
+#6 18.37   python3 python3-minimal python3.10 python3.10-minimal readline-common
+#6 18.67 0 upgraded, 15 newly installed, 0 to remove and 3 not upgraded.
+#6 18.67 Need to get 6532 kB of archives.
+#6 18.67 After this operation, 23.6 MB of additional disk space will be used.
+#6 18.67 Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-minimal amd64 3.10.12-1~22.04.3 [812 kB]
+#6 19.86 Get:2 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1 amd64 2.4.7-1ubuntu0.2 [91.0 kB]
+#6 20.56 Get:3 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10-minimal amd64 3.10.12-1~22.04.3 [2242 kB]
+#6 21.90 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-minimal amd64 3.10.6-1~22.04 [24.3 kB]
+#6 22.36 Get:5 http://archive.ubuntu.com/ubuntu jammy/main amd64 media-types all 7.0.0 [25.5 kB]
+#6 22.81 Get:6 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmpdec3 amd64 2.5.1-2build2 [86.8 kB]
+#6 23.49 Get:7 http://archive.ubuntu.com/ubuntu jammy/main amd64 readline-common all 8.1.2-1 [53.5 kB]
+#6 24.07 Get:8 http://archive.ubuntu.com/ubuntu jammy/main amd64 libreadline8 amd64 8.1.2-1 [153 kB]
+#6 24.88 Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsqlite3-0 amd64 3.37.2-2ubuntu0.3 [641 kB]
+#6 26.02 Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-stdlib amd64 3.10.12-1~22.04.3 [1848 kB]
+#6 27.37 Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10 amd64 3.10.12-1~22.04.3 [508 kB]
+#6 29.55 Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3-stdlib amd64 3.10.6-1~22.04 [6910 B]
+#6 29.84 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3 amd64 3.10.6-1~22.04 [22.8 kB]
+#6 30.28 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 distro-info-data all 0.52ubuntu0.6 [5160 B]
+#6 30.58 Get:15 http://archive.ubuntu.com/ubuntu jammy/main amd64 lsb-release all 11.1.0ubuntu4 [10.8 kB]
+#6 30.77 debconf: delaying package configuration, since apt-utils is not installed
+#6 30.80 Fetched 6532 kB in 12s (535 kB/s)
+#6 30.83 Selecting previously unselected package libpython3.10-minimal:amd64.
+#6 30.83 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4393 files and directories currently installed.)
+#6 30.84 Preparing to unpack .../libpython3.10-minimal_3.10.12-1~22.04.3_amd64.deb ...
+#6 30.85 Unpacking libpython3.10-minimal:amd64 (3.10.12-1~22.04.3) ...
+#6 30.97 Selecting previously unselected package libexpat1:amd64.
+#6 30.98 Preparing to unpack .../libexpat1_2.4.7-1ubuntu0.2_amd64.deb ...
+#6 30.99 Unpacking libexpat1:amd64 (2.4.7-1ubuntu0.2) ...
+#6 31.05 Selecting previously unselected package python3.10-minimal.
+#6 31.05 Preparing to unpack .../python3.10-minimal_3.10.12-1~22.04.3_amd64.deb ...
+#6 31.06 Unpacking python3.10-minimal (3.10.12-1~22.04.3) ...
+#6 31.38 Setting up libpython3.10-minimal:amd64 (3.10.12-1~22.04.3) ...
+#6 31.40 Setting up libexpat1:amd64 (2.4.7-1ubuntu0.2) ...
+#6 31.42 Setting up python3.10-minimal (3.10.12-1~22.04.3) ...
+#6 32.28 Selecting previously unselected package python3-minimal.
+#6 32.28 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4697 files and directories currently installed.)
+#6 32.32 Preparing to unpack .../0-python3-minimal_3.10.6-1~22.04_amd64.deb ...
+#6 32.32 Unpacking python3-minimal (3.10.6-1~22.04) ...
+#6 32.37 Selecting previously unselected package media-types.
+#6 32.37 Preparing to unpack .../1-media-types_7.0.0_all.deb ...
+#6 32.38 Unpacking media-types (7.0.0) ...
+#6 32.44 Selecting previously unselected package libmpdec3:amd64.
+#6 32.44 Preparing to unpack .../2-libmpdec3_2.5.1-2build2_amd64.deb ...
+#6 32.45 Unpacking libmpdec3:amd64 (2.5.1-2build2) ...
+#6 32.49 Selecting previously unselected package readline-common.
+#6 32.49 Preparing to unpack .../3-readline-common_8.1.2-1_all.deb ...
+#6 32.50 Unpacking readline-common (8.1.2-1) ...
+#6 32.54 Selecting previously unselected package libreadline8:amd64.
+#6 32.54 Preparing to unpack .../4-libreadline8_8.1.2-1_amd64.deb ...
+#6 32.55 Unpacking libreadline8:amd64 (8.1.2-1) ...
+#6 32.60 Selecting previously unselected package libsqlite3-0:amd64.
+#6 32.60 Preparing to unpack .../5-libsqlite3-0_3.37.2-2ubuntu0.3_amd64.deb ...
+#6 32.60 Unpacking libsqlite3-0:amd64 (3.37.2-2ubuntu0.3) ...
+#6 32.65 Selecting previously unselected package libpython3.10-stdlib:amd64.
+#6 32.65 Preparing to unpack .../6-libpython3.10-stdlib_3.10.12-1~22.04.3_amd64.deb ...
+#6 32.65 Unpacking libpython3.10-stdlib:amd64 (3.10.12-1~22.04.3) ...
+#6 32.83 Selecting previously unselected package python3.10.
+#6 32.84 Preparing to unpack .../7-python3.10_3.10.12-1~22.04.3_amd64.deb ...
+#6 32.84 Unpacking python3.10 (3.10.12-1~22.04.3) ...
+#6 32.88 Selecting previously unselected package libpython3-stdlib:amd64.
+#6 32.88 Preparing to unpack .../8-libpython3-stdlib_3.10.6-1~22.04_amd64.deb ...
+#6 32.89 Unpacking libpython3-stdlib:amd64 (3.10.6-1~22.04) ...
+#6 32.93 Setting up python3-minimal (3.10.6-1~22.04) ...
+#6 33.38 Selecting previously unselected package python3.
+#6 33.38 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5127 files and directories currently installed.)
+#6 33.39 Preparing to unpack .../python3_3.10.6-1~22.04_amd64.deb ...
+#6 33.40 Unpacking python3 (3.10.6-1~22.04) ...
+#6 33.43 Selecting previously unselected package distro-info-data.
+#6 33.43 Preparing to unpack .../distro-info-data_0.52ubuntu0.6_all.deb ...
+#6 33.44 Unpacking distro-info-data (0.52ubuntu0.6) ...
+#6 33.47 Selecting previously unselected package lsb-release.
+#6 33.48 Preparing to unpack .../lsb-release_11.1.0ubuntu4_all.deb ...
+#6 33.48 Unpacking lsb-release (11.1.0ubuntu4) ...
+#6 33.52 Setting up media-types (7.0.0) ...
+#6 33.54 Setting up distro-info-data (0.52ubuntu0.6) ...
+#6 33.56 Setting up libsqlite3-0:amd64 (3.37.2-2ubuntu0.3) ...
+#6 33.57 Setting up libmpdec3:amd64 (2.5.1-2build2) ...
+#6 33.59 Setting up readline-common (8.1.2-1) ...
+#6 33.61 Setting up libreadline8:amd64 (8.1.2-1) ...
+#6 33.62 Setting up libpython3.10-stdlib:amd64 (3.10.12-1~22.04.3) ...
+#6 33.64 Setting up libpython3-stdlib:amd64 (3.10.6-1~22.04) ...
+#6 33.66 Setting up python3.10 (3.10.12-1~22.04.3) ...
+#6 34.34 Setting up python3 (3.10.6-1~22.04) ...
+#6 34.43 Setting up lsb-release (11.1.0ubuntu4) ...
+#6 34.45 Processing triggers for libc-bin (2.35-0ubuntu3.6) ...
+#6 34.52 Reading package lists...
+#6 35.22 Building dependency tree...
+#6 35.42 Reading state information...
+#6 35.59 The following additional packages will be installed:
+#6 35.60   apparmor ca-certificates dbus dbus-user-session dirmngr dmsetup fuse3
+#6 35.60   gir1.2-glib-2.0 gnupg gnupg-l10n gnupg-utils gpg gpg-agent gpg-wks-client
+#6 35.60   gpg-wks-server gpgconf gpgsm libapparmor1 libargon2-1 libassuan0 libbsd0
+#6 35.60   libcbor0.8 libcryptsetup12 libdbus-1-3 libdevmapper1.02.1 libedit2
+#6 35.60   libfido2-1 libfuse3-3 libgirepository-1.0-1 libglib2.0-0 libglib2.0-data
+#6 35.60   libicu70 libip4tc2 libjson-c5 libkmod2 libksba8 libldap-2.5-0 libldap-common
+#6 35.60   liblzo2-2 libmd0 libnpth0 libnss-systemd libpam-systemd libsasl2-2
+#6 35.60   libsasl2-modules libsasl2-modules-db libx11-6 libx11-data libxau6 libxcb1
+#6 35.60   libxdmcp6 libxext6 libxml2 libxmuu1 networkd-dispatcher openssh-client
+#6 35.60   openssl pinentry-curses python3-dbus python3-gi shared-mime-info snapd
+#6 35.60   squashfs-tools systemd systemd-hwe-hwdb systemd-sysv systemd-timesyncd udev
+#6 35.60   xauth xdg-user-dirs
+#6 35.60 Suggested packages:
+#6 35.60   apparmor-profiles-extra apparmor-utils pinentry-gnome3 tor parcimonie
+#6 35.60   xloadimage scdaemon libsasl2-modules-gssapi-mit
+#6 35.60   | libsasl2-modules-gssapi-heimdal libsasl2-modules-ldap libsasl2-modules-otp
+#6 35.60   libsasl2-modules-sql iw | wireless-tools keychain libpam-ssh monkeysphere
+#6 35.60   ssh-askpass pinentry-doc python-dbus-doc zenity | kdialog systemd-container
+#6 35.60   libtss2-esys-3.0.2-0 libtss2-mu0 libtss2-rc0 policykit-1
+#6 35.68 The following NEW packages will be installed:
+#6 35.68   apparmor ca-certificates dbus dbus-user-session dirmngr dmsetup firefox
+#6 35.68   fuse3 gir1.2-glib-2.0 gnupg gnupg-l10n gnupg-utils gpg gpg-agent
+#6 35.68   gpg-wks-client gpg-wks-server gpgconf gpgsm libapparmor1 libargon2-1
+#6 35.68   libassuan0 libbsd0 libcbor0.8 libcryptsetup12 libdbus-1-3 libdevmapper1.02.1
+#6 35.68   libedit2 libfido2-1 libfuse3-3 libgirepository-1.0-1 libglib2.0-0
+#6 35.68   libglib2.0-data libicu70 libip4tc2 libjson-c5 libkmod2 libksba8
+#6 35.68   libldap-2.5-0 libldap-common liblzo2-2 libmd0 libnpth0 libnss-systemd
+#6 35.68   libpam-systemd libsasl2-2 libsasl2-modules libsasl2-modules-db libx11-6
+#6 35.68   libx11-data libxau6 libxcb1 libxdmcp6 libxext6 libxml2 libxmuu1
+#6 35.68   networkd-dispatcher openssh-client openssl pinentry-curses python3-dbus
+#6 35.68   python3-gi shared-mime-info snapd squashfs-tools systemd systemd-hwe-hwdb
+#6 35.68   systemd-sysv systemd-timesyncd udev xauth xdg-user-dirs
+#6 36.00 0 upgraded, 71 newly installed, 0 to remove and 3 not upgraded.
+#6 36.00 Need to get 52.3 MB of archives.
+#6 36.00 After this operation, 202 MB of additional disk space will be used.
+#6 36.00 Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libapparmor1 amd64 3.0.4-2ubuntu2.3 [39.3 kB]
+#6 36.51 Get:2 http://archive.ubuntu.com/ubuntu jammy/main amd64 libargon2-1 amd64 0~20171227-0.3 [19.5 kB]
+#6 36.96 Get:3 http://archive.ubuntu.com/ubuntu jammy/main amd64 libdevmapper1.02.1 amd64 2:1.02.175-2.1ubuntu4 [139 kB]
+#6 37.75 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libjson-c5 amd64 0.15-3~ubuntu1.22.04.2 [33.5 kB]
+#6 38.23 Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcryptsetup12 amd64 2:2.4.3-1ubuntu1.2 [211 kB]
+#6 39.12 Get:6 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libip4tc2 amd64 1.8.7-1ubuntu5.2 [19.9 kB]
+#6 39.56 Get:7 http://archive.ubuntu.com/ubuntu jammy/main amd64 libkmod2 amd64 29-1ubuntu1 [48.0 kB]
+#6 40.15 Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 systemd amd64 249.11-0ubuntu3.12 [4581 kB]
+#6 41.77 Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 systemd-sysv amd64 249.11-0ubuntu3.12 [10.5 kB]
+#6 42.06 Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 apparmor amd64 3.0.4-2ubuntu2.3 [595 kB]
+#6 43.17 Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 openssl amd64 3.0.2-0ubuntu1.14 [1184 kB]
+#6 44.45 Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 ca-certificates all 20230311ubuntu0.22.04.1 [155 kB]
+#6 45.25 Get:13 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmd0 amd64 1.0.4-1build1 [23.0 kB]
+#6 45.69 Get:14 http://archive.ubuntu.com/ubuntu jammy/main amd64 libbsd0 amd64 0.11.5-1 [44.8 kB]
+#6 46.22 Get:15 http://archive.ubuntu.com/ubuntu jammy/main amd64 libedit2 amd64 3.1-20210910-1build1 [96.8 kB]
+#6 46.93 Get:16 http://archive.ubuntu.com/ubuntu jammy/main amd64 libcbor0.8 amd64 0.8.0-2ubuntu1 [24.6 kB]
+#6 47.38 Get:17 http://archive.ubuntu.com/ubuntu jammy/main amd64 libfido2-1 amd64 1.10.0-1 [82.8 kB]
+#6 48.05 Get:18 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 openssh-client amd64 1:8.9p1-3ubuntu0.6 [906 kB]
+#6 49.22 Get:19 http://archive.ubuntu.com/ubuntu jammy/main amd64 liblzo2-2 amd64 2.10-2build3 [53.7 kB]
+#6 49.82 Get:20 http://archive.ubuntu.com/ubuntu jammy/main amd64 squashfs-tools amd64 1:4.5-3build1 [159 kB]
+#6 50.62 Get:21 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 udev amd64 249.11-0ubuntu3.12 [1557 kB]
+#6 51.91 Get:22 http://archive.ubuntu.com/ubuntu jammy/main amd64 libfuse3-3 amd64 3.10.5-1build1 [81.2 kB]
+#6 52.57 Get:23 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libdbus-1-3 amd64 1.12.20-2ubuntu4.1 [189 kB]
+#6 53.41 Get:24 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 dbus amd64 1.12.20-2ubuntu4.1 [158 kB]
+#6 54.23 Get:25 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpam-systemd amd64 249.11-0ubuntu3.12 [203 kB]
+#6 55.10 Get:26 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 dbus-user-session amd64 1.12.20-2ubuntu4.1 [9442 B]
+#6 55.38 Get:27 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 snapd amd64 2.58+22.04.1 [23.8 MB]
+#6 58.24 Get:28 http://archive.ubuntu.com/ubuntu jammy/main amd64 firefox amd64 1:1snap1-0ubuntu2 [72.3 kB]
+#6 58.88 Get:29 http://archive.ubuntu.com/ubuntu jammy/main amd64 dmsetup amd64 2:1.02.175-2.1ubuntu4 [81.7 kB]
+#6 59.56 Get:30 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libglib2.0-0 amd64 2.72.4-0ubuntu2.2 [1463 kB]
+#6 60.84 Get:31 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgirepository-1.0-1 amd64 1.72.0-1 [55.6 kB]
+#6 82.20 Err:32 http://archive.ubuntu.com/ubuntu jammy/main amd64 gir1.2-glib-2.0 amd64 1.72.0-1
+#6 82.20   403  connecting to archive.ubuntu.com:80: connecting to 185.125.190.39:80: dial tcp 185.125.190.39:80: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. [IP: 185.125.190.39 80]
+#6 82.64 Get:33 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libglib2.0-data all 2.72.4-0ubuntu2.2 [4612 B]
+#6 82.93 Get:34 http://archive.ubuntu.com/ubuntu jammy/main amd64 libicu70 amd64 70.1-2 [10.6 MB]
+#6 84.97 Get:35 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnss-systemd amd64 249.11-0ubuntu3.12 [133 kB]
+#6 85.73 Get:36 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libxml2 amd64 2.9.13+dfsg-1ubuntu0.3 [763 kB]
+#6 86.89 Get:37 http://archive.ubuntu.com/ubuntu jammy/main amd64 python3-dbus amd64 1.2.18-3build1 [99.5 kB]
+#6 87.62 Get:38 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-gi amd64 3.42.1-0ubuntu1 [229 kB]
+#6 88.94 Get:39 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 networkd-dispatcher all 2.1-2ubuntu0.22.04.2 [15.8 kB]
+#6 89.22 Get:40 http://archive.ubuntu.com/ubuntu jammy/main amd64 shared-mime-info amd64 2.1-2 [454 kB]
+#6 90.26 Get:41 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 systemd-timesyncd amd64 249.11-0ubuntu3.12 [31.2 kB]
+#6 90.72 Get:42 http://archive.ubuntu.com/ubuntu jammy/main amd64 xdg-user-dirs amd64 0.17-2ubuntu4 [53.9 kB]
+#6 91.30 Get:43 http://archive.ubuntu.com/ubuntu jammy/main amd64 fuse3 amd64 3.10.5-1build1 [24.7 kB]
+#6 91.76 Get:44 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxau6 amd64 1:1.0.9-1build5 [7634 B]
+#6 92.04 Get:45 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxdmcp6 amd64 1:1.1.3-0ubuntu5 [10.9 kB]
+#6 92.33 Get:46 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxcb1 amd64 1.14-3ubuntu3 [49.0 kB]
+#6 92.89 Get:47 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libx11-data all 2:1.7.5-1ubuntu0.3 [120 kB]
+#6 93.66 Get:48 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libx11-6 amd64 2:1.7.5-1ubuntu0.3 [667 kB]
+#6 94.83 Get:49 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxext6 amd64 2:1.3.4-1build1 [31.8 kB]
+#6 95.30 Get:50 http://archive.ubuntu.com/ubuntu jammy/main amd64 libxmuu1 amd64 2:1.1.3-3 [10.2 kB]
+#6 95.58 Get:51 http://archive.ubuntu.com/ubuntu jammy/main amd64 xauth amd64 1:1.1-1build2 [27.5 kB]
+#6 96.04 Get:52 http://archive.ubuntu.com/ubuntu jammy/main amd64 libassuan0 amd64 2.5.5-1build1 [38.2 kB]
+#6 96.53 Get:53 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gpgconf amd64 2.2.27-3ubuntu2.1 [94.2 kB]
+#6 97.24 Get:54 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libksba8 amd64 1.6.0-2ubuntu0.2 [119 kB]
+#6 98.00 Get:55 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsasl2-modules-db amd64 2.1.27+dfsg2-3ubuntu1.2 [20.5 kB]
+#6 98.44 Get:56 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsasl2-2 amd64 2.1.27+dfsg2-3ubuntu1.2 [53.8 kB]
+#6 99.04 Get:57 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libldap-2.5-0 amd64 2.5.16+dfsg-0ubuntu0.22.04.2 [183 kB]
+#6 99.90 Get:58 http://archive.ubuntu.com/ubuntu jammy/main amd64 libnpth0 amd64 1.6-3build2 [8664 B]
+#6 100.2 Get:59 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 dirmngr amd64 2.2.27-3ubuntu2.1 [293 kB]
+#6 101.1 Get:60 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gnupg-l10n all 2.2.27-3ubuntu2.1 [54.4 kB]
+#6 101.7 Get:61 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gnupg-utils amd64 2.2.27-3ubuntu2.1 [308 kB]
+#6 102.7 Get:62 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gpg amd64 2.2.27-3ubuntu2.1 [519 kB]
+#6 103.8 Get:63 http://archive.ubuntu.com/ubuntu jammy/main amd64 pinentry-curses amd64 1.1.1-1build2 [34.4 kB]
+#6 104.3 Get:64 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gpg-agent amd64 2.2.27-3ubuntu2.1 [209 kB]
+#6 105.2 Get:65 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gpg-wks-client amd64 2.2.27-3ubuntu2.1 [62.7 kB]
+#6 105.8 Get:66 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gpg-wks-server amd64 2.2.27-3ubuntu2.1 [57.5 kB]
+#6 106.5 Get:67 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gpgsm amd64 2.2.27-3ubuntu2.1 [197 kB]
+#6 107.4 Get:68 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gnupg all 2.2.27-3ubuntu2.1 [315 kB]
+#6 108.4 Get:69 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libldap-common all 2.5.16+dfsg-0ubuntu0.22.04.2 [15.5 kB]
+#6 108.7 Get:70 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsasl2-modules amd64 2.1.27+dfsg2-3ubuntu1.2 [68.8 kB]
+#6 109.3 Get:71 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 systemd-hwe-hwdb all 249.11.5 [3228 B]
+#6 109.3 E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/g/gobject-introspection/gir1.2-glib-2.0_1.72.0-1_amd64.deb  403  connecting to archive.ubuntu.com:80: connecting to 185.125.190.39:80: dial tcp 185.125.190.39:80: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. [IP: 185.125.190.39 80]
+#6 109.3 E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?
+#6 109.3 Fetched 52.1 MB in 1min 14s (708 kB/s)
+#6 ERROR: executor failed running [/bin/sh -c apt update &&     apt-get install -y lsb-release &&     apt-get -y install firefox &&     apt-get install -y wget &&     apt-get install -y openjdk-11-jdk &&     apt-get install -y --no-install-recommends software-properties-common &&     apt-get install -y --no-install-recommends gpg-agent &&     add-apt-repository ppa:deadsnakes/ppa &&     apt-get install -y --no-install-recommends python3.11 &&     apt-get install -y --no-install-recommends python3-pip &&     apt-get install -y --no-install-recommends python3.11-venv &&     apt-get install -y openssh-server unzip curl &&     service ssh start &&     apt install -y sudo &&     apt-get install -y --no-install-recommends python3.11 &&     apt-get clean &&     rm -rf /var/lib/apt/lists/*]: exit code: 100
+------
+ > [2/8] RUN apt update &&     apt-get install -y lsb-release &&     apt-get -y install firefox &&     apt-get install -y wget &&     apt-get install -y openjdk-11-jdk &&     apt-get install -y --no-install-recommends software-properties-common &&     apt-get install -y --no-install-recommends gpg-agent &&     add-apt-repository ppa:deadsnakes/ppa &&     apt-get install -y --no-install-recommends python3.11 &&     apt-get install -y --no-install-recommends python3-pip &&     apt-get install -y --no-install-recommends python3.11-venv &&     apt-get install -y openssh-server unzip curl &&     service ssh start &&     apt install -y sudo &&     apt-get install -y --no-install-recommends python3.11 &&     apt-get clean &&     rm -rf /var/lib/apt/lists/*:
+#6 105.2 Get:65 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gpg-wks-client amd64 2.2.27-3ubuntu2.1 [62.7 kB]
+#6 105.8 Get:66 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gpg-wks-server amd64 2.2.27-3ubuntu2.1 [57.5 kB]
+#6 106.5 Get:67 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gpgsm amd64 2.2.27-3ubuntu2.1 [197 kB]
+#6 107.4 Get:68 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gnupg all 2.2.27-3ubuntu2.1 [315 kB]
+#6 108.4 Get:69 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libldap-common all 2.5.16+dfsg-0ubuntu0.22.04.2 [15.5 kB]
+#6 108.7 Get:70 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libsasl2-modules amd64 2.1.27+dfsg2-3ubuntu1.2 [68.8 kB]
+#6 109.3 Get:71 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 systemd-hwe-hwdb all 249.11.5 [3228 B]
+#6 109.3 E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/g/gobject-introspection/gir1.2-glib-2.0_1.72.0-1_amd64.deb  403  connecting to archive.ubuntu.com:80: connecting to 185.125.190.39:80: dial tcp 185.125.190.39:80: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. [IP: 185.125.190.39 80]
+#6 109.3 E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?
+#6 109.3 Fetched 52.1 MB in 1min 14s (708 kB/s)
+------
+failed to solve: executor failed running [/bin/sh -c apt update &&     apt-get install -y lsb-release &&     apt-get -y install firefox &&     apt-get install -y wget &&     apt-get install -y openjdk-11-jdk &&     apt-get install -y --no-install-recommends software-properties-common &&     apt-get install -y --no-install-recommends gpg-agent &&     add-apt-repository ppa:deadsnakes/ppa &&     apt-get install -y --no-install-recommends python3.11 &&     apt-get install -y --no-install-recommends python3-pip &&     apt-get install -y --no-install-recommends python3.11-venv &&     apt-get install -y openssh-server unzip curl &&     service ssh start &&     apt install -y sudo &&     apt-get install -y --no-install-recommends python3.11 &&     apt-get clean &&     rm -rf /var/lib/apt/lists/*]: exit code: 100
+2024-02-19 15:38:30.170 | INFO     | init.init_docker:start:44 - Creation and launching of docker servers is completed.
+
+2024-02-19 15:38:30.171 | INFO     | init.init_docker:start:47 - End work init_docker function.
+
+2024-02-19 15:38:30.171 | INFO     | __main__:build:25 - End work build function.
+

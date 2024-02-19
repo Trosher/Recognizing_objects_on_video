@@ -1,29 +1,41 @@
-import pyspark
 from pyspark.sql import SparkSession
+from pyspark.sql.types import StringType, StructType, StructField
+import redis
+import json
+import confluent_kafka
+import msgpack_numpy as m
 
-print("<<---***--- START ---***--->>")
+redis_client = redis.Redis(host="172.18.0.6", port=6379)
 
-spark = (
-    SparkSession.builder
-        .appName("Word Count")
-        .master("spark://10.6.0.7:7077")
-        .getOrCreate()
-)
+schema = StructType([
+    StructField("url", StringType(), True)
+])
 
-rows = [
-(1,"clothes"), (2,"games"), (3,"electronics"),
-(4,"cars"), (5,"travel"), (6,"books")
-]
+def write_to_redis(row):
+    conf_p = {'bootstrap.servers': '172.18.0.3:29092'}
+    producer = confluent_kafka.Producer(conf_p)
+    redis_client = redis.Redis(host="172.18.0.6", port=6379)
 
-schema = "ad_id BIGINT, category STRING"
-adCategoryDF = spark.createDataFrame(rows, schema)
-adCategoryDF.show()
+    stream = cv2.VideoCapture(json.loads(row.value.decode('utf-8'))["url"])
+    ret, frame = stream.read()
+    
+    producer.produce("frame_to_analyze", value="aga".encode('utf-8'))
+    producer.poll(1)
+    redis_client.set(json.loads(row.value.decode('utf-8'))["url"], m.packb(frame))
 
-adCategoryDF.repartition(1).write \
-            .format("csv") \
-            .mode("overwrite") \
-            .option("header", "true") \
-            .option("sep", "\t") \
-            .save("./files/tests")
-            
-print("<<---***--- END ---***--->>")
+spark = SparkSession.builder \
+    .appName("KafkaStream") \
+    .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0") \
+    .getOrCreate()
+
+kafka_stream = spark \
+  .readStream \
+  .format("kafka") \
+  .option("kafka.bootstrap.servers", "172.18.0.3:29092") \
+  .option("subscribe", "url_video") \
+  .option("startingOffsets", "latest") \
+  .load()
+
+query = kafka_stream.writeStream.foreach(write_to_redis).start()
+
+query.awaitTermination()

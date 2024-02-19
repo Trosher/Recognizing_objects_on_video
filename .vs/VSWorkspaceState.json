@@ -2,12 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\docker",
+    "\\docker\\src",
     "\\docker\\ubuntu",
+    "\\docker\\ubuntu\\app",
+    "\\docker\\ubuntu\\app\\src",
     "\\init",
     "\\init\\__pycache__",
     "\\logs",
     "\\logs\\build_logs"
   ],
-  "SelectedNode": "\\buid.py",
+  "SelectedNode": "\\docker\\ubuntu\\app\\src\\server_get_video.py",
   "PreviewInSolutionExplorer": false
 }

@@ -1,3 +1,20 @@
+import sys
+from loguru import logger
+from confluent_kafka import Producer
+
+conf = {'bootstrap.servers':'172.18.0.3:29092'}
+producer = Producer(conf)
+
+def delivery_callback(err, msg):
+    if err:
+        logger.error('Message delivery failed: {}'.format(err))
+    else:
+        logger.info('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
+
+message = '{"user": 1, "url":"http://211.132.61.124:80/mjpg/video.mjpg"}'
+producer.produce("url_video", value=message.encode('utf-8'), callback=delivery_callback)
+producer.poll(0)
+
 from asyncio import run, create_task
 from signal import signal, SIGINT, SIGTERM
 from loguru import logger
@@ -9,6 +26,7 @@ import msgpack_numpy as m
 from datetime import datetime
 from sys import platform
 from os import getcwd
+from pyspark import SparkContext, SparkConf
 
 # dobavit funkcional otklucenia stream
 
@@ -16,18 +34,15 @@ class server_get_vidio(object):
     def __init__(self):             
         self.urls = {}
         self.last_url = None
-        conf_prod = {'bootstrap.servers': 'localhost:29092'}
-        conf_cons = {'bootstrap.servers': 'localhost:29092',
+        conf_prod = {'bootstrap.servers': '172.18.0.3:29092'}
+        conf_cons = {'bootstrap.servers': '172.18.0.3:29092',
             'group.id': 'geters',
             'auto.offset.reset': 'earliest'
             }
         self.producer = Producer(conf_prod)
         self.consumer = Consumer(conf_cons)
         self.consumer.subscribe(["url_video"])
-        self.redis = Redis(host="127.0.0.1",port=10001)
-       
-    def __check_system_win(self):
-        return True if platform == "win32" or platform == "win64" else False
+        self.redis = Redis(host="172.18.0.6", port=6379)
 
     def __get_time(self):
         time = datetime.now()
@@ -35,8 +50,7 @@ class server_get_vidio(object):
 
     @logger.catch(level='INFO')
     async def __create_log_file(self):
-        slash = "\\" if self.__check_system_win() else "/"
-        path_to_log = f"{getcwd()}{slash}logs{slash}server_get_vidio_log{slash}runtime_server_get_vidio_{self.__get_time()}.log"
+        path_to_log = f"{getcwd()}/logs/server_get_vidio_log/runtime_server_get_vidio_{self.__get_time()}.log"
         logger.add(path_to_log, retention="1 days")
         logger.info(path_to_log)
 
@@ -56,18 +70,18 @@ class server_get_vidio(object):
         del self.urls[url]
     
     @logger.catch(level='INFO')
-    async def __retrieving_dir_from_message(self, msg):
+    def __retrieving_dir_from_message(self, msg):
         if msg['url']:
             logger.info(f"Adding a new url {msg['url']}")
             self.urls[msg['url']] = cv2.VideoCapture(msg['url'])
-            self.last_url = next(reversed(self.urls))
-        else:
-            task = create_task(self.__del_user(msg['url']))
-            await task
-            self.last_url = None
+            self.last_url = msg['url']
+        #else:
+        #    task = create_task(self.__del_user(msg['url']))
+        #    await task
+        #    self.last_url = None
 
     @logger.catch(level='INFO')
-    async def __working_with_message(self, msg):
+    def __working_with_message(self, msg):
         if msg.error():
             if msg.error().code() == KafkaError._PARTITION_EOF:
                 logger.warning(f'Reached end of topic {msg.topic()} [{msg.partition()}] at offset {msg.offset()}')
@@ -75,28 +89,28 @@ class server_get_vidio(object):
                 logger.error(f'Error occured: {msg.error()}')
         else:
             logger.info(f"New message ({msg.value()}) received from the url_video topic")
-            task = create_task(self.__retrieving_dir_from_message(loads(msg.value())))
-            await task
+            self.__retrieving_dir_from_message(loads(msg.value()))
     
     @logger.catch(level='INFO')
     async def __frame_sending(self, frame, url):
-        self.redis.set(url, m.packb(frame))
-        self.redis.expire(url, 10)
-        self.producer.produce("frame_to_analyze", value=f"{url}".encode('utf-8'))
-        self.producer.poll(0)
+        if not frame.any() == None:
+            self.redis.set(url, m.packb(frame))
+            self.redis.expire(url, 10)
+            self.producer.produce("frame_to_analyze", value=f"{url}".encode('utf-8'))
+            self.producer.poll(0)
 
     @logger.catch(level='INFO')
     async def __get_frame(self, url):
         while True:
             ret, frame = self.urls[url].read()
             if ret:
-                task = create_task(self.__frame_sending(frame, url))
-                await task
+                task_frame_sending = create_task(self.__frame_sending(frame, url))
+                await task_frame_sending
             else:
                 logger.error("Error: Could not read frame")
                 break
-        task = create_task(self.__del_user(url))
-        await task
+        task_del_user = create_task(self.__del_user(url))
+        await task_del_user
 
     @logger.catch(level='INFO')
     async def __create_stream(self):
@@ -105,8 +119,8 @@ class server_get_vidio(object):
             # add message about this situation
             del self.urls[self.last_url]
         else:
-            task = create_task(self.__get_frame(self.last_url))
-            await task
+            task_get_frame = create_task(self.__get_frame(self.last_url))
+            await task_get_frame
             
     @logger.catch(level='INFO')
     async def start(self):
@@ -114,13 +128,13 @@ class server_get_vidio(object):
         logger.info("Start get_video_server")
         signal(SIGINT, self.__end_work)
         signal(SIGTERM, self.__end_work)
+        task_create_stream = create_task(self.__create_stream())
         while True:
             msg = self.consumer.poll(1.0)
             if msg:
-                await self.__working_with_message(msg)
+                self.__working_with_message(msg.decode('utf-8'))
                 if self.last_url:
-                    task = create_task(self.__create_stream())
-                    await task
+                    await task_create_stream
 
 def start_server_get_vidio():
     server = server_get_vidio()
