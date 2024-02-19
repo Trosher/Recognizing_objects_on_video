@@ -11,20 +11,6 @@ from os import getcwd
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StringType, StructType, StructField
 
-# dobavit funkcional otklucenia stream
-def get_frame(msg):
-    conf_p = {'bootstrap.servers': '172.18.0.3:29092'}
-    producer = confluent_kafka.Producer(conf_p)
-    redis = Redis(host="172.18.0.6", port=6379)
-    url = loads(msg.value.decode('utf-8'))["url"]
-    stream = cv2.VideoCapture(url)
-    ret, frame = stream.read()
-    if ret:
-        redis.set(url, m.packb(frame))
-        redis.expire(url, 10)
-        producer.produce("frame_to_analyze", value=f"{url}".encode('utf-8'))
-        producer.poll(1)
-
 @logger.catch(level='INFO')
 def get_time():
     time = datetime.now()
@@ -54,20 +40,34 @@ def init_spark_cons(spark):
         .load()
     return kafka_stream.writeStream.foreach(get_frame).start()
 
+def get_frame(msg):
+    conf_p = {'bootstrap.servers': '172.18.0.3:29092'}
+    producer = confluent_kafka.Producer(conf_p)
+    redis = Redis(host="172.18.0.6", port=6379)
+
+    url = loads(msg.value.decode('utf-8'))["url"]
+    stream = cv2.VideoCapture(url)
+    ret, frame = stream.read()
+
+    if ret:
+        redis.set(url, m.packb(frame))
+        redis.expire(url, 10)
+        producer.produce("frame_to_analyze", value=f"{url}".encode('utf-8'))
+        producer.poll(1)
+
 @logger.catch(level='INFO')
 async def start_server_get_vidio():
     create_log_file()
     logger.info("Start get_video_server")
     signal(SIGINT, end_work)
     signal(SIGTERM, end_work)
-
+    
     spark = SparkSession.builder \
         .appName("KafkaStream") \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0") \
         .getOrCreate()
 
     query_cons = init_spark_cons(spark)
-
     query_cons.awaitTermination()
 
 if __name__ == "__main__":

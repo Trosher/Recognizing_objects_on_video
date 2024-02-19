@@ -1,0 +1,2 @@
+2024-02-19 20:12:59.016 | INFO     | __main__:create_log_file:23 - /app/ubuntu/app/src/logs/server_get_vidio_log/runtime_server_get_vidio_2024-2-19-20-12-59.log
+2024-02-19 20:12:59.016 | INFO     | __main__:start_server_get_vidio:61 - Start get_video_server
