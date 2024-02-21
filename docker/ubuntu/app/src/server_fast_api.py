@@ -21,16 +21,17 @@ class ui_video_server(FastAPI):
         
         slash = "\\" if (True if platform == "win32" or platform == "win64" else False) else "/"
         self.ui_path = dirname(realpath(__file__)) + slash + "ui" + slash + "page.html"
-        conf_prod = {'bootstrap.servers': 'localhost:29092'}
-        conf_cons = {'bootstrap.servers': 'localhost:29092',
-            'group.id': 'ui',
-            'auto.offset.reset': 'earliest'
+        conf_prod = {'bootstrap.servers': '172.18.0.3:29092'}
+        conf_cons = {'bootstrap.servers': '172.18.0.3:29092',
+            'group.id': 'geters',
+            'auto.offset.reset': 'earliest',
+            'max.poll.interval.ms': '86400000'
             }
         
         self.producer = Producer(conf_prod)
         self.consumer = Consumer(conf_cons)
         self.consumer.subscribe(["processed_images"])
-        self.redis = Redis(host="127.0.0.1",port=10001)
+        self.redis = Redis(host="172.18.0.6",port=10001)
         
         self.add_api_route("/", self.__get_root, methods=["GET"], 
                            include_in_schema=False)
@@ -53,34 +54,29 @@ class ui_video_server(FastAPI):
         logger.info(path_to_log)
 
     @logger.catch
-    def __message_verification(self, msg):
-        status = True
-        if msg.error():
-            if msg.error().code() == KafkaError._PARTITION_EOF:
-                logger.warning(f'Reached end of topic {msg.topic()} [{msg.partition()}] at offset {msg.offset()}')
-            else:
-                logger.error(f'Error occured: {msg.error()}')
-            status = False
-        return status
-
-    @logger.catch
     async def __start_stream(self, url_for_upload: str):
-        message = '{{"url":"{}"}}'.format(url_for_upload)
+        message = f'{{"url":"{url_for_upload}", "status":"start"}}'
         self.producer.produce("url_video", value=message.encode('utf-8'))
         self.producer.poll(0)
         logger.info(f"A message ({message}) has been forwarded to topick url_video")
-        msg = self.consumer.poll(1.0)
-        while msg:
-            if msg and self.__message_verification(msg):
-                frame = m.unpackb(self.redis.get(msg.decode('utf-8')))
-                try:
-                    yield  Image.fromarray(frame)
-                    msg = self.consumer.poll(1.0)
-                except Exception as e:
-                    logger.error(e)
-                    msg = None
+        while True:
+            msg = self.consumer.poll(timeout=5)
+            if msg:
+                for key in msg:
+                    frame = m.unpackb(self.redis.get(key.decode('utf-8')))
+                    try:
+                        yield Image.fromarray(frame)
+                    except Exception as e:
+                        logger.error(e)
+                        message = '{{"url":"{}, "status":"del"}}'.format(url_for_upload)
+                        self.producer.produce("url_video", value=message.encode('utf-8'))
+                        self.producer.poll(0)
+                        break
             else:
-                msg = None
+                message = f'{{"url":"{url_for_upload}", "status":"del"}}'
+                self.producer.produce("url_video", value=message.encode('utf-8'))
+                self.producer.poll(0)
+                break
             
     @logger.catch
     def __get_stream(self, url: str):
@@ -98,16 +94,12 @@ class ui_video_server(FastAPI):
             logger.error(e)
             request = JSONResponse(content={"message": "Page ui not found"}, status_code=501)
         return request
-  
-def start_ui_video_server():
+
+if __name__ == "__main__":
     app = ui_video_server(
         title="Ui for a server that displays objects on video",
         description="Description: You send a link to a frame stream and receive it with recognized objects in return.",
     )
-    run(app, host="127.0.0.1", port=9999)
-
-if __name__ == "__main__":
-    start_ui_video_server()
-    #logger.error("The get_vidio_server.py module cannot be run by itself, use the start_program.py")
+    run(app, host="127.0.0.1", port=9997)
 else:
-    start_ui_video_server()
+    logger.error("The ui_video_server.py module cannot be run by module")

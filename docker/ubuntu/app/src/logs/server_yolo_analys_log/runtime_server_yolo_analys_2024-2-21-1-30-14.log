@@ -1,0 +1,66 @@
+2024-02-21 01:30:14.659 | INFO     | __main__:__create_log_file:47 - /app/ubuntu/app/src/logs/server_yolo_analys_log/runtime_server_yolo_analys_2024-2-21-1-30-14.log
+2024-02-21 01:30:14.660 | INFO     | __main__:start:113 - Start server_yolo_analys
+2024-02-21 01:38:24.021 | INFO     | asyncio.events:_run:80 - An error has been caught in function '_run', process 'MainProcess' (14604), thread 'MainThread' (140193808097280):
+Traceback (most recent call last):
+
+  File "/app/ubuntu/app/src/server_yolo_analys.py", line 122, in <module>
+    run(sya.start())
+    │   │   └ <function server_yolo_analys.start at 0x7f8063a53560>
+    │   └ <__main__.server_yolo_analys object at 0x7f8063a436d0>
+    └ <function run at 0x7f8169ca2b60>
+
+  File "/usr/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           │      │   └ <coroutine object server_yolo_analys.start at 0x7f80779c8140>
+           │      └ <function Runner.run at 0x7f81696413a0>
+           └ <asyncio.runners.Runner object at 0x7f8077970090>
+  File "/usr/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<server_yolo_analys.start() running at /usr/local/lib/python3.11/dist-packages/loguru/_logge...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x7f816963efc0>
+           │    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x7f8077970090>
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 640, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x7f816963ef20>
+    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 607, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x7f8169640d60>
+    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 1922, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x7f8169ca3380>
+    └ <Handle <TaskStepMethWrapper object at 0x7f8155c72fe0>()>
+> File "/usr/lib/python3.11/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle <TaskStepMethWrapper object at 0x7f8155c72fe0>()>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle <TaskStepMethWrapper object at 0x7f8155c72fe0>()>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle <TaskStepMethWrapper object at 0x7f8155c72fe0>()>
+
+  File "/app/ubuntu/app/src/server_yolo_analys.py", line 118, in start
+    query.awaitTermination()
+    │     └ <function StreamingQuery.awaitTermination at 0x7f8063b07c40>
+    └ <pyspark.sql.streaming.query.StreamingQuery object at 0x7f8077af8a90>
+
+  File "/usr/local/lib/python3.11/dist-packages/pyspark/sql/streaming/query.py", line 221, in awaitTermination
+    return self._jsq.awaitTermination()
+           │    └ JavaObject id=o46
+           └ <pyspark.sql.streaming.query.StreamingQuery object at 0x7f8077af8a90>
+  File "/usr/local/lib/python3.11/dist-packages/py4j/java_gateway.py", line 1322, in __call__
+    return_value = get_return_value(
+                   └ <function capture_sql_exception.<locals>.deco at 0x7f8063af4720>
+  File "/usr/local/lib/python3.11/dist-packages/pyspark/errors/exceptions/captured.py", line 179, in deco
+    return f(*a, **kw)
+           │  │    └ {}
+           │  └ ('x', <py4j.clientserver.JavaClient object at 0x7f8063ab34d0>, 'o46', 'awaitTermination')
+           └ <function get_return_value at 0x7f8063fd62a0>
+  File "/usr/local/lib/python3.11/dist-packages/py4j/protocol.py", line 334, in get_return_value
+    raise Py4JError(
+          └ <class 'py4j.protocol.Py4JError'>
+
+py4j.protocol.Py4JError: An error occurred while calling o46.awaitTermination
+2024-02-21 01:38:24.027 | INFO     | __main__:__exit__:51 - End work server_yolo_analys

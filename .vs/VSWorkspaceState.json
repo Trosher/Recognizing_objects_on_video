@@ -11,6 +11,6 @@
     "\\logs",
     "\\logs\\build_logs"
   ],
-  "SelectedNode": "\\docker\\ubuntu\\app\\src\\server_get_video.py",
+  "SelectedNode": "\\docker\\docker-compose.yml",
   "PreviewInSolutionExplorer": false
 }

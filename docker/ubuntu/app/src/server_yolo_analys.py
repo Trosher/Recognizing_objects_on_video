@@ -1,4 +1,3 @@
-import confluent_kafka
 from loguru import logger
 from asyncio import run
 from signal import signal, SIGINT, SIGTERM
@@ -8,68 +7,118 @@ from datetime import datetime
 from os import getcwd
 import yolov5
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StringType, StructType, StructField
+from pyspark.sql.functions import from_json, col
+from pyspark.sql.types import StructType, StringType
+from confluent_kafka import Producer, Consumer
 
-@logger.catch(level='INFO')
-def get_time():
-    time = datetime.now()
-    return f'{time.year}-{time.month}-{time.day}-{time.hour}-{time.minute}-{time.second}'
 
-@logger.catch(level='INFO')
-def create_log_file():
-    path_to_log = f"{getcwd()}/logs/server_yolo_analys_log/runtime_server_yolo_analys_{get_time()}.log"
-    logger.add(path_to_log, retention="1 days")
-    logger.info(path_to_log)
+class server_yolo_analys(object):
+	@logger.catch(level='INFO')
+	def __init__(self):
+		self.__spark = self.__get_spark()
+		self.__spark_stream = self.__get_stream_kafka()
 
-@logger.catch(level='INFO')
-def end_work(a, b):
-    logger.info("End work get_vidio_server")
-    exit(0)
+		conf_prod = {'bootstrap.servers': '172.18.0.3:29092'}
+		conf_cons = {'bootstrap.servers': '172.18.0.3:29092',
+			'group.id': 'server_get_vidio',
+			'auto.offset.reset': 'earliest',
+			'max.poll.interval.ms': '86400000'
+			}
+		self.__producer = Producer(conf_prod)
+		self.__consumer = Consumer(conf_cons)
+		self.__consumer.subscribe(["frame_to_analyze"])
+		self.__redis = Redis(host="172.18.0.6", port=6379)
 
-def init_spark_cons(spark):
-    schema = StructType([
-        StructField("url", StringType(), True)
-    ])
-    kafka_stream = spark \
-        .readStream \
-        .format("kafka") \
-        .option("kafka.bootstrap.servers", "172.18.0.3:29092") \
-        .option("subscribe", "frame_to_analyze") \
-        .option("startingOffsets", "latest") \
-        .load()
-    return kafka_stream
+		self.__model = yolov5.load('yolov5s.pt')
 
-def analysis_frame(msg, model):
-	conf_p = {'bootstrap.servers': '172.18.0.3:29092'}
-	producer = confluent_kafka.Producer(conf_p)
-	redis = Redis(host="172.18.0.6", port=6379)
+	@logger.catch(level='INFO')
+	def __enter__(self):
+		return self
 
-	url = msg.value.decode('utf-8')
-	frame = model(m.unpackb(redis.get(url)))
+	@logger.catch(level='INFO')
+	def __get_time(self):
+		time = datetime.now()
+		return f'{time.year}-{time.month}-{time.day}-{time.hour}-{time.minute}-{time.second}'
 
-	redis.set(f"{url}_redy", m.packb(frame.render()))
-	redis.expire(f"{url}_redy", 10)
+	@logger.catch(level='INFO')
+	def __create_log_file(self):
+		path_to_log = f"{getcwd()}/logs/server_yolo_analys_log/runtime_server_yolo_analys_{self.__get_time()}.log"
+		logger.add(path_to_log, retention="1 days")
+		logger.info(path_to_log)
 
-	producer.produce("processed_images", value=f"{msg}_redy".encode('utf-8'))
-	producer.poll(1)
+	@logger.catch(level='INFO')
+	def __exit__(self, exc_type, exc_val, exc_tb):
+		logger.info("End work server_yolo_analys")
+		self.__consumer.close()
+		self.__redis.close()
+		self.__spark.stop()
 
-async def start_server_yolo_analys():
-	create_log_file()
-	logger.info("Start server_yolo_analys")
-	signal(SIGINT, end_work)
-	signal(SIGTERM, end_work)
+	@logger.catch(level='INFO')
+	def __get_spark(self):
+		try:
+			spark = SparkSession.builder \
+				.appName("ParserSession") \
+				.config('spark.jars.packages', 'org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0') \
+				.getOrCreate()
+			spark.sparkContext.setLogLevel("ERROR")
+		except Exception as ex:
+			logger.error(f"Spark connection don't created\n.Exception:\n{ex}")
+		return spark
 
-	spark = SparkSession.builder \
-		.appName("KafkaStream") \
-		.config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0") \
-		.getOrCreate()
+	@logger.catch(level='INFO')
+	def __get_stream_kafka(self):
+		try:
+			kafka_topic_stream = self.__spark.readStream \
+				.format("kafka") \
+				.option("kafka.bootstrap.servers", "172.18.0.3:29092") \
+				.option("subscribe", "frame_to_analyze") \
+				.option("startingOffsets", "latest") \
+				.load()
+		except Exception as ex:
+			logger.error(f"Kafka stream doesn't open\n.Exeption:\n{ex}")
+		return kafka_topic_stream
 
-	model = yolov5.load('yolov5s.pt')
-	kafka_stream = init_spark_cons(spark)
-	query_cons = kafka_stream.writeStream.foreach(lambda msg: analysis_frame(msg, model)).start()
-	query_cons.awaitTermination()
+	@logger.catch(level='INFO')
+	def __picture_recognition(self, url, frame):
+		frame = self.__model(frame).render()
+		self.__redis.set(f"{url}_redy", m.packb(frame))
+		self.__redis.expire(f"{url}_redy", 10)
+		self.__producer.produce("processed_images", value=f"{url}_redy".encode("utf-8"))
+		self.__producer.poll(0)
+
+	@logger.catch(level='INFO')
+	def __get_df_spark(self):
+		schema = StructType(
+			[
+				StructField("url", StringType()),
+				StructField("frame_id", StringType())
+			]
+		)
+		queue = self.__spark_stream.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+		return queue
+
+	@logger.catch(level='INFO')
+	def __analys_frame(self, batch_df, batch_id):
+		data_collect = batch_df.collect()
+		for data_row in data_collect:
+			url = data_row["value"].decode("utf-8")
+			try:
+				self.__picture_recognition(url, m.unpackb(self.__redis.get(url)))
+			except Exception as e:
+				logger.error(e)
+
+	@logger.catch(level='INFO')
+	async def start(self):
+		self.__create_log_file()
+		logger.info("Start server_yolo_analys")
+		query = self.__get_stream_kafka().writeStream \
+			.foreachBatch(self.__analys_frame) \
+			.outputMode("append") \
+			.start()
+		query.awaitTermination()
 
 if __name__ == "__main__":
-    run(start_server_yolo_analys())
+	with server_yolo_analys() as sya:
+		run(sya.start())
 else:
-    logger.error("The server_yolo_analys.py module cannot be run by module")
+	logger.error("The server_yolo_analys.py module cannot be run by module")
