@@ -19,7 +19,7 @@
             opacity: 1;
             transition: opacity 1s;
             position: fixed;
-            top: 20px;
+            top: 50px;
             left: 20px;
         }
 
@@ -48,7 +48,7 @@
     </style>
 </head>
 <body>
-    <video id="videoPlayer"></video>
+    <img id="videoPlayer" src="/videoPlayer">
     <input id="urlInput" type="text" placeholder="Enter video URL">
     <button id="playButton" onclick="send_url()">Start analysis</button>
 
@@ -57,25 +57,21 @@
             var url = document.getElementById('urlInput').value;
             var re = /(http|https):\/\/\d+\.\d+\.\d+\.\d+:\d+\/.+\.mjpg/;
             if (re.exec(url)) {
-                playVideo(url);
+                upload_url(url);
             } else {
                 createMesegeError();
             }
         }
         
-        function playVideo(url) {
-            fetch(`videoPlayer/?url=${url}`)
+        function upload_url(url) {
+            fetch(`uploadUrl/?url=${url}`, {
+                method: 'POST'
+            })
                 .then(response => {
                     if (!response.ok) {
                         createMesegeError()
                         throw new Error('Network response was not ok');
                     }
-                    return response.blob();
-                })
-                .then(blob => {
-                    videoPlayer.src = URL.createObjectURL(blob);
-                    videoPlayer.load();
-                    videoPlayer.play();
                 })
                 .catch(error => {
                     createMesegeError()

@@ -1,16 +1,13 @@
 from loguru import logger
 from asyncio import run
-from signal import signal, SIGINT, SIGTERM
 from redis import Redis
 import msgpack_numpy as m
 from datetime import datetime
 from os import getcwd
 import yolov5
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json, col
 from pyspark.sql.types import StructType, StringType
-from confluent_kafka import Producer, Consumer
-
+from kafka_init import get_producer
 
 class server_yolo_analys(object):
 	@logger.catch(level='INFO')
@@ -18,22 +15,20 @@ class server_yolo_analys(object):
 		self.__spark = self.__get_spark()
 		self.__spark_stream = self.__get_stream_kafka()
 
-		conf_prod = {'bootstrap.servers': '172.18.0.3:29092'}
-		conf_cons = {'bootstrap.servers': '172.18.0.3:29092',
-			'group.id': 'server_get_vidio',
-			'auto.offset.reset': 'earliest',
-			'max.poll.interval.ms': '86400000'
-			}
-		self.__producer = Producer(conf_prod)
-		self.__consumer = Consumer(conf_cons)
-		self.__consumer.subscribe(["frame_to_analyze"])
+		self.__producer = get_producer('172.18.0.3:29092')
 		self.__redis = Redis(host="172.18.0.6", port=6379)
-
 		self.__model = yolov5.load('yolov5s.pt')
 
 	@logger.catch(level='INFO')
 	def __enter__(self):
 		return self
+
+	@logger.catch(level='INFO')
+	def __exit__(self, exc_type, exc_val, exc_tb):
+		logger.info("End work server_yolo_analys")
+		self.__redis.close()
+		self.__spark.stop()
+		exit(0)
 
 	@logger.catch(level='INFO')
 	def __get_time(self):
@@ -47,11 +42,14 @@ class server_yolo_analys(object):
 		logger.info(path_to_log)
 
 	@logger.catch(level='INFO')
-	def __exit__(self, exc_type, exc_val, exc_tb):
-		logger.info("End work server_yolo_analys")
-		self.__consumer.close()
-		self.__redis.close()
-		self.__spark.stop()
+	def __get_df_spark(self):
+		schema = StructType(
+			[
+				StructField("url", StringType())
+			]
+		)
+		queue = self.__spark_stream.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+		return queue
 
 	@logger.catch(level='INFO')
 	def __get_spark(self):
@@ -61,8 +59,8 @@ class server_yolo_analys(object):
 				.config('spark.jars.packages', 'org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0') \
 				.getOrCreate()
 			spark.sparkContext.setLogLevel("ERROR")
-		except Exception as ex:
-			logger.error(f"Spark connection don't created\n.Exception:\n{ex}")
+		except Exception as e:
+			logger.error(ex)
 		return spark
 
 	@logger.catch(level='INFO')
@@ -73,29 +71,19 @@ class server_yolo_analys(object):
 				.option("kafka.bootstrap.servers", "172.18.0.3:29092") \
 				.option("subscribe", "frame_to_analyze") \
 				.option("startingOffsets", "latest") \
+				.option("failOnDataLoss", "false") \
 				.load()
-		except Exception as ex:
-			logger.error(f"Kafka stream doesn't open\n.Exeption:\n{ex}")
+		except Exception as e:
+			logger.error(e)
 		return kafka_topic_stream
 
 	@logger.catch(level='INFO')
 	def __picture_recognition(self, url, frame):
-		frame = self.__model(frame).render()
+		frame = self.__model(frame).render()[0]
 		self.__redis.set(f"{url}_redy", m.packb(frame))
 		self.__redis.expire(f"{url}_redy", 10)
 		self.__producer.produce("processed_images", value=f"{url}_redy".encode("utf-8"))
 		self.__producer.poll(0)
-
-	@logger.catch(level='INFO')
-	def __get_df_spark(self):
-		schema = StructType(
-			[
-				StructField("url", StringType()),
-				StructField("frame_id", StringType())
-			]
-		)
-		queue = self.__spark_stream.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
-		return queue
 
 	@logger.catch(level='INFO')
 	def __analys_frame(self, batch_df, batch_id):
