@@ -35,7 +35,11 @@ ENV HADOOP_HOME=/usr/local/hadoop
 ENV SPARK_HOME=/usr/local/spark
 ENV PATH=$PATH:$HADOOP_HOME/bin:$SPARK_HOME/bin
 
+RUN useradd -m host_u && \
+    echo 'host_u:qwer' | chpasswd && \
+    adduser host_u sudo
+
 COPY /app /app
 WORKDIR /app
 RUN pip3 install -r requirements.txt
-ENTRYPOINT /bin/sh
+ENTRYPOINT service ssh start && bash /app/ubuntu/app/src/start.sh && /bin/sh

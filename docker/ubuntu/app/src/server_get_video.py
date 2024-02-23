@@ -29,6 +29,7 @@ class server_get_vidio(object):
             self.__stream.release()
         except:
             pass
+        self.__producer.flush()
         self.__consumer.close()
         self.__redis.close()
         exit(0)
@@ -40,7 +41,7 @@ class server_get_vidio(object):
 
     @logger.catch(level='INFO')
     def __create_log_file(self):
-        path_to_log = f"{getcwd()}/logs/server_get_vidio_log/runtime_server_get_vidio_{get_time()}.log"
+        path_to_log = f"{getcwd()}/logs/server_get_vidio_log/runtime_server_get_vidio_{self.__get_time()}.log"
         logger.add(path_to_log, retention="1 days")
         logger.info(path_to_log)
 
@@ -108,6 +109,7 @@ class server_get_vidio(object):
 
     @logger.catch(level='INFO')
     async def start(self):
+        self.__create_log_file()
         logger.info("Start get_video_server")
         tasks = [create_task(self.__check_urls()), create_task(self.__stream_controler())]
         for task in tasks:

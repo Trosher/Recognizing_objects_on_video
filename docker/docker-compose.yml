@@ -2,6 +2,7 @@ version: '3'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:6.2.4
+    container_name: zookeeper
     healthcheck:
       test: [ "CMD", "nc", "-vz", "localhost", "2181" ]
       interval: 10s
@@ -18,6 +19,7 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:6.2.4
+    container_name: kafka
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -59,6 +61,7 @@ services:
 
   kafka-topics-generator:
     image: confluentinc/cp-kafka:6.2.4
+    container_name: kafka-topics-generator
     depends_on:
       kafka:
         condition: service_healthy
@@ -82,7 +85,7 @@ services:
 
   redis:
     image: redis/redis-stack:7.2.0-v8
-    restart: always
+    container_name: redis
     ports:
       - "6379:6379"
       - "13333:8001"
@@ -98,12 +101,14 @@ services:
 
   myapp:
     tty: true
+    container_name: myapp
     ports:
-     - "6669:6669"
-     - "6670:22"
+      - "9999:9999"
+      - "6670:22"
     build: /ubuntu
     volumes:
       - .:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 9999
     networks:
       network:
         ipv4_address: 172.18.0.10

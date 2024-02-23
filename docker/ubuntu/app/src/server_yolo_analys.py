@@ -6,7 +6,7 @@ from datetime import datetime
 from os import getcwd
 import yolov5
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StringType
+from pyspark.sql.types import StructType, StringType, StructField
 from kafka_init import get_producer
 
 class server_yolo_analys(object):
@@ -26,6 +26,7 @@ class server_yolo_analys(object):
 	@logger.catch(level='INFO')
 	def __exit__(self, exc_type, exc_val, exc_tb):
 		logger.info("End work server_yolo_analys")
+		self.__producer.flush()
 		self.__redis.close()
 		self.__spark.stop()
 		exit(0)
@@ -43,12 +44,7 @@ class server_yolo_analys(object):
 
 	@logger.catch(level='INFO')
 	def __get_df_spark(self):
-		schema = StructType(
-			[
-				StructField("url", StringType())
-			]
-		)
-		queue = self.__spark_stream.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+		queue = self.__spark_stream.selectExpr("CAST(value AS STRING)")
 		return queue
 
 	@logger.catch(level='INFO')
@@ -60,7 +56,7 @@ class server_yolo_analys(object):
 				.getOrCreate()
 			spark.sparkContext.setLogLevel("ERROR")
 		except Exception as e:
-			logger.error(ex)
+			logger.error(e)
 		return spark
 
 	@logger.catch(level='INFO')
@@ -89,7 +85,7 @@ class server_yolo_analys(object):
 	def __analys_frame(self, batch_df, batch_id):
 		data_collect = batch_df.collect()
 		for data_row in data_collect:
-			url = data_row["value"].decode("utf-8")
+			url = data_row["value"]
 			try:
 				self.__picture_recognition(url, m.unpackb(self.__redis.get(url)))
 			except Exception as e:
@@ -99,7 +95,7 @@ class server_yolo_analys(object):
 	async def start(self):
 		self.__create_log_file()
 		logger.info("Start server_yolo_analys")
-		query = self.__get_stream_kafka().writeStream \
+		query = self.__get_df_spark().writeStream \
 			.foreachBatch(self.__analys_frame) \
 			.outputMode("append") \
 			.start()

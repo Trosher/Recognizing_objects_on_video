@@ -8,12 +8,12 @@ from fastapi.responses import StreamingResponse
 from fastapi.templating import Jinja2Templates
 from typing import Any
 from uvicorn import run
-from starlette.responses import HTMLResponse
 from PIL import Image
 from datetime import datetime
 from os import getcwd
 import io
 
+# 192.168.0.217
 # http://211.132.61.124:80/mjpg/video.mjpg
 class ui_video_server(FastAPI):
     @logger.catch
@@ -40,6 +40,7 @@ class ui_video_server(FastAPI):
         logger.info("End work ui_video_server")
         self.__redis.close()
         self.__consumer.close()
+        self.__producer.flush()
         exit(0)
 
     def __get_time(self):
@@ -102,6 +103,7 @@ if __name__ == "__main__":
         title="Ui for a server that displays objects on video", 
         description="Description: You send a link to a frame stream and receive it with recognized objects in return.",
     ) as app:
-        run(app, host="127.0.0.1", port=9999)
+        run(app, host="0.0.0.0", port=9999)
+
 else:
     logger.error("The ui_video_server.py module cannot be run by module")

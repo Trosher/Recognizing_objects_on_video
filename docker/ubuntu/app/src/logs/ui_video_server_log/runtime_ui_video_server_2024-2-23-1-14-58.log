@@ -1,0 +1,3 @@
+2024-02-23 01:14:58.932 | INFO     | __main__:__create_log_file:54 - /app/ubuntu/app/src/logs/ui_video_server_log/runtime_ui_video_server_2024-2-23-1-14-58.log
+2024-02-23 01:16:20.177 | INFO     | __main__:__get_root:98 - Given to the root page
+2024-02-23 01:16:22.225 | INFO     | __main__:__upload_url:94 - A message ({"url":"http://211.132.61.124:80/mjpg/video.mjpg"}) has been forwarded to topick url_video

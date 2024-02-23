@@ -1,0 +1,3 @@
+2024-02-23 01:15:37.237 | INFO     | __main__:__create_log_file:43 - /app/ubuntu/app/src/logs/server_yolo_analys_log/runtime_server_yolo_analys_2024-2-23-1-15-37.log
+2024-02-23 01:15:37.238 | INFO     | __main__:start:97 - Start server_yolo_analys
+2024-02-23 01:18:15.671 | ERROR    | __main__:__analys_frame:92 - Error 111 connecting to 172.18.0.6:6379. Connection refused.
