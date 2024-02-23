@@ -6,8 +6,8 @@ from datetime import datetime
 from os import getcwd
 import yolov5
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StringType, StructField
 from kafka_init import get_producer
+import time
 
 class server_yolo_analys(object):
 	@logger.catch(level='INFO')
@@ -102,6 +102,7 @@ class server_yolo_analys(object):
 		query.awaitTermination()
 
 if __name__ == "__main__":
+	time.sleep(20)
 	with server_yolo_analys() as sya:
 		run(sya.start())
 else:

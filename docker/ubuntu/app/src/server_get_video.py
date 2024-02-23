@@ -8,6 +8,7 @@ import msgpack_numpy as m
 from redis import Redis
 from datetime import datetime
 from os import getcwd
+import time
 
 class server_get_vidio(object):   
     @logger.catch(level='INFO')
@@ -118,6 +119,7 @@ class server_get_vidio(object):
             pass
 
 if __name__ == "__main__":
+    time.sleep(20)
     with server_get_vidio() as ssgv:
         run(ssgv.start())
 else:

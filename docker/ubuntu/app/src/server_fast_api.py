@@ -12,6 +12,7 @@ from PIL import Image
 from datetime import datetime
 from os import getcwd
 import io
+import time
 
 # 192.168.0.217
 # http://211.132.61.124:80/mjpg/video.mjpg
@@ -99,6 +100,7 @@ class ui_video_server(FastAPI):
         return self.templates.TemplateResponse('page.html', {'request': request})
 
 if __name__ == "__main__":
+    time.sleep(20)
     with ui_video_server(
         title="Ui for a server that displays objects on video", 
         description="Description: You send a link to a frame stream and receive it with recognized objects in return.",

@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\docker",
+    "\\docker\\ubuntu",
+    "\\docker\\ubuntu\\app",
+    "\\docker\\ubuntu\\app\\src",
+    "\\init"
+  ],
+  "SelectedNode": "\\docker\\ubuntu\\app\\src\\server_get_video.py",
+  "PreviewInSolutionExplorer": false
+}

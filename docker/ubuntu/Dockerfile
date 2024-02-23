@@ -42,4 +42,5 @@ RUN useradd -m host_u && \
 COPY /app /app
 WORKDIR /app
 RUN pip3 install -r requirements.txt
-ENTRYPOINT service ssh start && bash /app/ubuntu/app/src/start.sh && /bin/sh
+WORKDIR /app/ubuntu/app/src
+ENTRYPOINT service ssh start && bash start.sh && /bin/sh
