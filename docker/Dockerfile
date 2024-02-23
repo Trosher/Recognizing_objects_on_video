@@ -1,6 +1,9 @@
-FROM ubuntu:22.04.4
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
+
+ARG HADOOP_VERSION
+ARG SPARK_VERSION
 
 RUN apt update && \
     apt-get install -y wget && \
@@ -20,14 +23,13 @@ RUN apt update && \
 
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
 
-RUN wget https://dlcdn.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz && \
-    tar -xvzf hadoop-3.3.6.tar.gz && \
-    mv hadoop-3.3.6 /usr/local/hadoop
+RUN wget https://dlcdn.apache.org/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz && \
+    tar -xvzf hadoop-$HADOOP_VERSION.tar.gz && \
+    mv hadoop-$HADOOP_VERSION /usr/local/hadoop
 
-#Spark (/usr/local/spark/bin/pyspark --master spark://172.18.0.7:7077)
-RUN wget https://www.apache.org/dist/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz && \
-    tar -xvzf spark-3.5.0-bin-hadoop3.tgz && \
-    mv spark-3.5.0-bin-hadoop3 /usr/local/spark
+RUN wget https://www.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz && \
+    tar -xvzf spark-$SPARK_VERSION-bin-hadoop3.tgz && \
+    mv spark-$SPARK_VERSION-bin-hadoop3 /usr/local/spark
 
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 ENV HADOOP_HOME=/usr/local/hadoop
@@ -38,8 +40,13 @@ RUN useradd -m host_u && \
     echo 'host_u:qwer' | chpasswd && \
     adduser host_u sudo
 
-COPY /app /app
 WORKDIR /app
+COPY /app/requirements.txt /app
 RUN pip3 install -r requirements.txt
+
+COPY /app /app
 WORKDIR /app/src
-ENTRYPOINT service ssh start && bash start.sh && /bin/sh
+COPY .env .
+EXPOSE 9999
+
+ENTRYPOINT service ssh start && /bin/sh

@@ -4,7 +4,7 @@ services:
     image: confluentinc/cp-zookeeper:6.2.4
     container_name: zookeeper
     healthcheck:
-      test: [ "CMD", "nc", "-vz", "localhost", "2181" ]
+      test: [ "CMD", "nc", "-vz", "127.0.0.1", "2181" ]
       interval: 10s
       timeout: 3s
       retries: 3
@@ -15,7 +15,7 @@ services:
       - 22181:2181
     networks:
       network:
-        ipv4_address: 172.18.0.2
+        ipv4_address: $ZOKPR_HOST
 
   kafka:
     image: confluentinc/cp-kafka:6.2.4
@@ -34,7 +34,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: OUTSIDE://:29092,INTERNAL://:9092
-      KAFKA_ADVERTISED_LISTENERS: OUTSIDE://172.18.0.3:29092,INTERNAL://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: OUTSIDE://$KAFKA_HOST:29092,INTERNAL://kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 1
@@ -42,7 +42,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       network:
-          ipv4_address: 172.18.0.3
+          ipv4_address: $KAFKA_HOST
 
   kafka-ui:
     image: provectuslabs/kafka-ui
@@ -57,7 +57,7 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     networks:
       network:
-          ipv4_address: 172.18.0.4
+          ipv4_address: $KFKUI_HOST
 
   kafka-topics-generator:
     image: confluentinc/cp-kafka:6.2.4
@@ -81,7 +81,7 @@ services:
         "
     networks:
       network:
-          ipv4_address: 172.18.0.5
+          ipv4_address: $TOPIC_HOST
 
   redis:
     image: redis/redis-stack:7.2.0-v8
@@ -90,31 +90,56 @@ services:
       - "6379:6379"
       - "13333:8001"
     environment:
-      - REDIS_BIND=172.18.0.6
+      - REDIS_BIND=$REDIS_HOST
       - REDIS_PORT=6379
       - REDIS_DATABASES=16
       - REDIS_AOF_ENABLED=no
       - REDIS_REPLICATION_MODE=master
     networks:
       network:
-          ipv4_address: 172.18.0.6
+          ipv4_address: $REDIS_HOST
 
   myapp:
     tty: true
-    container_name: myapp
     ports:
-      - "9999:9999"
-      - "6670:22"
-    build: .
-    command: uvicorn main:app --host 0.0.0.0 --port 9999
+     - "9999:9999"
+     - "6670:22"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        HADOOP_VERSION: $HADOOP_VERSION
+        SPARK_VERSION: $SPARK_VERSION
+    depends_on:
+      - kafka
+      - redis
+    container_name: myapp
+    volumes:
+      - ./app:/app
     networks:
       network:
-        ipv4_address: 172.18.0.10
+        ipv4_address: $MYAPP_HOST
+
+  nginx:
+    image: 'nginx:1.23.3-alpine'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:z
+    depends_on:
+      - myapp
+    restart: unless-stopped
+    ports:
+      - $NGINX_PORT:80
+    container_name: nginx
+    networks:
+      network:
+        ipv4_address: $NGINX_HOST
 
 networks:
   network:
     driver: bridge
+    name: $NETWK_NAME
     ipam:
       driver: default
       config:
-        - subnet: 172.18.0.0/16
+        - subnet: $NETWK_ADDR
+          gateway: $NETWK_GATE

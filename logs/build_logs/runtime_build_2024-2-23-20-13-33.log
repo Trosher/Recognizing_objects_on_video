@@ -1,0 +1,20 @@
+2024-02-23 20:13:33.693 | INFO     | __main__:build:23 - Start work build function.
+
+2024-02-23 20:13:33.694 | INFO     | init.init_docker:start:37 - Start work init_docker function.
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 32B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 2.1s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:22.04
+failed to receive status: rpc error: code = Unavailable desc = error reading from server: EOF
+2024-02-23 20:15:02.973 | INFO     | init.init_docker:start:41 - Creation and launching of docker servers is completed.
+
+2024-02-23 20:15:02.992 | INFO     | init.init_docker:start:44 - End work init_docker function.
+
+2024-02-23 20:15:02.994 | INFO     | __main__:build:25 - End work build function.
+

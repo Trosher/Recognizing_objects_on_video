@@ -28,8 +28,8 @@ class server_yolo_analys(object):
 		self.__spark = self.__get_spark()
 		self.__spark_stream = self.__get_stream_kafka()
 
-		self.__producer = get_producer('172.18.0.3:29092')
-		self.__redis = Redis(host="172.18.0.6", port=6379)
+		self.__producer = get_producer('172.16.0.3:29092')
+		self.__redis = Redis(host="172.16.0.6", port=6379)
 		self.__model = yolov5.load('yolov5s.pt')
 
 	@logger.catch(level='INFO')
@@ -121,7 +121,7 @@ class server_yolo_analys(object):
 		try:
 			kafka_topic_stream = self.__spark.readStream \
 				.format("kafka") \
-				.option("kafka.bootstrap.servers", "172.18.0.3:29092") \
+				.option("kafka.bootstrap.servers", "172.16.0.3:29092") \
 				.option("subscribe", "frame_to_analyze") \
 				.option("startingOffsets", "latest") \
 				.option("failOnDataLoss", "false") \

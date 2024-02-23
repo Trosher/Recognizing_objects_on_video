@@ -21,7 +21,7 @@ def get_consumer(host, topic, group_id):
         group_id (str): The group ID for the consumer group.
 
     Returns:
-        ñonsumer: A Kafka consumer instance subscribed to the specified topic.
+        Consumer: A Kafka consumer instance subscribed to the specified topic.
 
     """
     consumer = Consumer({'bootstrap.servers': host, 

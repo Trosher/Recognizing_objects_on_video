@@ -28,9 +28,9 @@ class server_get_vidio(object):
         """
         self.__url = None
         self.__stream = None
-        self.__producer = get_producer('172.18.0.3:29092')
-        self.__consumer = get_consumer('172.18.0.3:29092', 'url_video', 'geters')
-        self.__redis = Redis(host="172.18.0.6", port=6379)
+        self.__producer = get_producer('172.16.0.3:29092')
+        self.__consumer = get_consumer('172.16.0.3:29092', 'url_video', 'geters')
+        self.__redis = Redis(host="172.16.0.6", port=6379)
 
     @logger.catch(level='INFO')
     def __enter__(self):

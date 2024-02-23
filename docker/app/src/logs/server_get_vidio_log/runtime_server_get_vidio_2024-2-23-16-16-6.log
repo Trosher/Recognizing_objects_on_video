@@ -1,0 +1,8 @@
+2024-02-23 16:16:07.815 | INFO     | __main__:__create_log_file:91 - /app/src/logs/server_get_vidio_log/runtime_server_get_vidio_2024-2-23-16-16-6.log
+2024-02-23 16:16:07.816 | INFO     | __main__:start:221 - Start get_video_server
+2024-02-23 16:16:07.817 | INFO     | __main__:__check_urls:187 - Start __check_urls
+2024-02-23 16:16:08.817 | INFO     | __main__:__stream_controler:202 - Start __stream_controler
+2024-02-23 16:16:24.406 | INFO     | __main__:__stream_controler:205 - http://211.132.61.124:80/mjpg/video.mjpg
+2024-02-23 16:16:24.406 | INFO     | __main__:__creater_stream:142 - Start thred for pars url: http://211.132.61.124:80/mjpg/video.mjpg
+2024-02-23 16:21:32.830 | ERROR    | __main__:__creater_stream:152 - Unknown problems with frame intake
+2024-02-23 16:22:16.755 | INFO     | __main__:__exit__:60 - End work get_vidio_server

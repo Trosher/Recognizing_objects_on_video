@@ -4,11 +4,11 @@ from redis import Redis
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from fastapi.templating import Jinja2Templates
-from uvicorn import run
+from uvicorn import run as u_run
 
 import time
 from os import getcwd
-from asyncio import run, sleep
+from asyncio import sleep
 
 import msgpack_numpy as m
 from typing import Any
@@ -33,13 +33,14 @@ class ui_video_server(FastAPI):
             None
 
         """
+        logger.info("Start work ui_video_server")
         super().__init__(**extra)
         self.templates = Jinja2Templates(directory=f"{getcwd()}/ui/")
         self.render_url = None
 
-        self.__producer = get_producer('172.18.0.3:29092')
-        self.__consumer = get_consumer('172.18.0.3:29092', 'processed_images', 'ui')
-        self.__redis = Redis(host="172.18.0.6", port=6379)
+        self.__producer = get_producer('172.16.0.3:29092')
+        self.__consumer = get_consumer('172.16.0.3:29092', 'processed_images', 'ui')
+        self.__redis = Redis(host="172.16.0.6", port=6379)
         
         self.add_api_route(path="/", endpoint=self.__get_root, methods=["GET"], include_in_schema=False)
         self.add_api_route(path="/videoPlayer", endpoint=self.__get_stream, methods=["GET"], include_in_schema=False)
@@ -184,7 +185,6 @@ if __name__ == "__main__":
         title="Ui for a server that displays objects on video", 
         description="Description: You send a link to a frame stream and receive it with recognized objects in return.",
     ) as app:
-        run(app, host="0.0.0.0", port=9999)
-
+        u_run(app, host="0.0.0.0", port=9999)
 else:
     logger.error("The ui_video_server.py module cannot be run by module")
