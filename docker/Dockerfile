@@ -1,9 +1,8 @@
-FROM ubuntu:latest
+FROM ubuntu:22.04.4
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && \
-    apt-get -y install firefox && \
     apt-get install -y wget && \
     apt-get install -y openjdk-11-jdk && \
     apt-get install -y --no-install-recommends software-properties-common && \
@@ -42,5 +41,5 @@ RUN useradd -m host_u && \
 COPY /app /app
 WORKDIR /app
 RUN pip3 install -r requirements.txt
-WORKDIR /app/ubuntu/app/src
+WORKDIR /app/src
 ENTRYPOINT service ssh start && bash start.sh && /bin/sh

@@ -12,9 +12,6 @@ class init_docker(object):
         Starts the process of initialize the all docker servers.
     """
     def __create_docker_server(self, file, slash:str):
-        #call(['docker', 'build', f'docker{slash}', 
-        #      '-t', 'sandbox/spark', '.'],
-        #     stdout=file, stderr=file, stdin=file)
         call(['docker-compose', '-f', 
               f'docker{slash}docker-compose.yml', 'up', '-d', '--build'], 
              stdout=file, stderr=file, stdin=file)

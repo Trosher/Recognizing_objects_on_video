@@ -1,17 +1,30 @@
-from loguru import logger
 from asyncio import run
-from redis import Redis
+
 import msgpack_numpy as m
+import yolov5
+
+import time
 from datetime import datetime
 from os import getcwd
-import yolov5
+from loguru import logger
+
+from redis import Redis
 from pyspark.sql import SparkSession
 from kafka_init import get_producer
 import time
 
 class server_yolo_analys(object):
+	"""The yolo analys server class."""
 	@logger.catch(level='INFO')
 	def __init__(self):
+		"""Initializes the server_yolo_analys.
+
+		Initializes Spark, Kafka stream, producer, Redis, and YOLOv5 model.
+
+		Returns:
+			None
+			
+		"""
 		self.__spark = self.__get_spark()
 		self.__spark_stream = self.__get_stream_kafka()
 
@@ -21,10 +34,27 @@ class server_yolo_analys(object):
 
 	@logger.catch(level='INFO')
 	def __enter__(self):
+		"""Enters the context of the server_yolo_analys.
+
+		Returns:
+			self: The instance of the class.
+			
+		"""
 		return self
 
 	@logger.catch(level='INFO')
 	def __exit__(self, exc_type, exc_val, exc_tb):
+		"""Handles the exit of the server_yolo_analys.
+
+		Args:
+			exc_type: The type of exception.
+			exc_val: The exception value.
+			exc_tb: The exception traceback.
+
+		Returns:
+			None
+			
+		"""
 		logger.info("End work server_yolo_analys")
 		self.__producer.flush()
 		self.__redis.close()
@@ -33,22 +63,44 @@ class server_yolo_analys(object):
 
 	@logger.catch(level='INFO')
 	def __get_time(self):
+		"""Gets the current time and returns it in a specific format.
+
+        Returns:
+            str: The current time formatted as 'year-month-day-hour-minute-second'.
+
+        """
 		time = datetime.now()
 		return f'{time.year}-{time.month}-{time.day}-{time.hour}-{time.minute}-{time.second}'
 
 	@logger.catch(level='INFO')
 	def __create_log_file(self):
+		"""Creates a log file for the yolo analys server.
+        
+        Returns:
+            None
+        
+        """
 		path_to_log = f"{getcwd()}/logs/server_yolo_analys_log/runtime_server_yolo_analys_{self.__get_time()}.log"
 		logger.add(path_to_log, retention="1 days")
 		logger.info(path_to_log)
 
 	@logger.catch(level='INFO')
 	def __get_df_spark(self):
+		"""Gets the DataFrame from the Spark stream.
+
+		Returns:
+			DataFrame: The DataFrame from the Spark stream.
+		"""
 		queue = self.__spark_stream.selectExpr("CAST(value AS STRING)")
 		return queue
 
 	@logger.catch(level='INFO')
 	def __get_spark(self):
+		"""Gets the Spark session for data processing.
+
+		Returns:
+			SparkSession: The Spark session for data processing.
+		"""
 		try:
 			spark = SparkSession.builder \
 				.appName("ParserSession") \
@@ -61,6 +113,11 @@ class server_yolo_analys(object):
 
 	@logger.catch(level='INFO')
 	def __get_stream_kafka(self):
+		"""Gets the Kafka stream for frame_to_analyze topic.
+
+		Returns:
+			DataFrame: The Kafka stream for frame_to_analyze topic.
+		"""
 		try:
 			kafka_topic_stream = self.__spark.readStream \
 				.format("kafka") \
@@ -74,7 +131,17 @@ class server_yolo_analys(object):
 		return kafka_topic_stream
 
 	@logger.catch(level='INFO')
-	def __picture_recognition(self, url, frame):
+	def __picture_recognition(self, url: str, frame):
+		"""Performs picture recognition on the given URL and frame, then sends the processed image to a Kafka topic.
+
+		Args:
+			url (str): The URL of the image.
+			frame: The image frame to be processed.
+
+		Returns:
+			None
+			
+		"""
 		frame = self.__model(frame).render()[0]
 		self.__redis.set(f"{url}_redy", m.packb(frame))
 		self.__redis.expire(f"{url}_redy", 10)
@@ -83,6 +150,16 @@ class server_yolo_analys(object):
 
 	@logger.catch(level='INFO')
 	def __analys_frame(self, batch_df, batch_id):
+		"""Analyzes each batch of data from the streaming DataFrame.
+
+		Args:
+			batch_df: The batch DataFrame to be analyzed.
+			batch_id: The ID of the batch.
+
+		Returns:
+			None
+			
+		"""
 		data_collect = batch_df.collect()
 		for data_row in data_collect:
 			url = data_row["value"]
@@ -93,6 +170,14 @@ class server_yolo_analys(object):
 
 	@logger.catch(level='INFO')
 	async def start(self):
+		"""Starts the server and uses Apache Spark for streaming data analysis.
+
+		This method creates a log file, starts the server, and uses Spark's writeStream to process incoming data with a custom function __analys_frame.
+    
+		Returns:
+			None
+			
+		"""
 		self.__create_log_file()
 		logger.info("Start server_yolo_analys")
 		query = self.__get_df_spark().writeStream \
