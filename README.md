@@ -40,4 +40,4 @@ in the wrong order and will not be started when restarting the cluster
 > Dependence of containers on each other ((zookiper >> kafka >> kafka_ui), redis) >> myapp >> nginx
 - Containers have an internal virtual network, but myapp proxies to local port 9999 and if it gets busy the app may not be available. 
 Also nginx access via port 80 is provided.
-- If you change the ip in the .env for the docker build, the project won't work. Autopulling ip from .env to code will be added in release 1.1.
+- If you change the ip in the **_.env_** for the docker build, the project won't work. Autopulling ip from **_.env_** to code will be added in release 1.1.
